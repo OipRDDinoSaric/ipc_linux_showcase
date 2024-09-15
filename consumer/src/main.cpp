@@ -1,22 +1,17 @@
 #include <thread>
 
-namespace Consumer
-{
-void
-receiveTask()
-{}
+#include <consume/Consumer.hpp>
 
-void
-acknowledgeSendTask()
-{}
-}  // namespace Consumer
+#include <fmt/format.h>
 
 int
 main(int, char*[])
 {
+    fmt::println("Consumer started.");
+
     // Note that jthread is not supported by clang I used.
-    std::thread receiveThread {Consumer::receiveTask};
-    std::thread acknowledgeSendThread {Consumer::acknowledgeSendTask};
+    std::thread receiveThread {Consume::Consumer::receiveTask};
+    std::thread acknowledgeSendThread {Consume::Consumer::acknowledgeSendTask};
 
     receiveThread.join();
     acknowledgeSendThread.join();
