@@ -1,0 +1,2 @@
+# ipc_linux_showcase
+Two processes communication synchronization

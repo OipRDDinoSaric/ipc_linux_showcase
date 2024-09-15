@@ -1,0 +1,892 @@
+# Tool version: clang-format-11
+# ---
+
+# Example:
+#         class testExample() {
+#         public:
+#             classMember1;
+#             classMember2;
+#         private:
+#             classMember3;
+#         }
+#
+AccessModifierOffset: -4
+
+# Determines horizontal alignment of arguments after an open bracket.
+# Applies to parentheses, angle brackets and square brackets.
+#
+# Example:
+#         someLongFunction(argument1,
+#                          argument2);
+#
+AlignAfterOpenBracket: Align
+
+
+# Determines whether assignment operators on consecutive lines will be
+# aligned or not.
+#
+# Example:
+#         int aaaa = 12;
+#         int b    = 14;
+#         int cc   = 23;
+#
+AlignConsecutiveAssignments: true
+
+# Determines whether bitfield separators on consecutive lines will be
+# aligned or not.
+#
+# Example:
+#         int aaaa : 1;
+#         int b    : 12;
+#         int cc   : 8;
+#
+AlignConsecutiveBitFields: true
+
+# Determines whether declaration names on consecutive lines will be
+# aligned or not.
+#
+# Example:
+#         int         aaaa = 13;
+#         float       b    = 23;
+#         std::string ccc = “foo”;
+#
+AlignConsecutiveDeclarations: true
+
+# Determines whether C/C++ preprocessor macros on consecutive lines will be
+# aligned or not.
+#
+# Example:
+#         #define SHORT_NAME       42
+#         #define LONGER_NAME      0x007f
+#         #define EVEN_LONGER_NAME (2)
+#         #define foo(x)           (x * x)
+#
+AlignConsecutiveMacros: true
+
+# Determines how backslashes in escaped newlines will be aligned.
+#
+# Example:
+#         #define A   \
+#           int aaaa; \
+#           int b;    \
+#           int cccccccc;
+#
+AlignEscapedNewlines: Left
+
+# Determines how operands of binary and ternary expressions are aligned
+# horizontally.
+#
+# Example:
+#         int aaa = bbbbbbbbbbb +
+#                   cccccc;
+#
+AlignOperands: Align
+
+# Determines whether trailing comments are aligned or not.
+#
+# Example:
+#         int a;     // Comment a
+#         int b = 2; // Comment b
+#
+AlignTrailingComments: true
+
+
+# Determine whether to allow putting all arguments onto the next line if a
+# function call or braced initializer list doesn’t fit on a single line.
+#
+# Example:
+#         callFunction(a,
+#                      b,
+#                      c,
+#                      d);
+#
+AllowAllArgumentsOnNextLine: false
+
+# Determine whether to allow putting all member initializers onto the next
+# line if a constructor definition with a member initializer list doesn’t
+# fit on a single line.
+#
+# Example:
+#         MyClass::MyClass() :
+#             member0(0),
+#             member1(2) {}
+#
+AllowAllConstructorInitializersOnNextLine: false
+
+# Determine whether to allow putting all parameters of a function
+# declaration onto the next line if the function declaration doesn’t
+# fit on a single line.
+#
+# Example:
+#         myFunction(foo, bar, baz);
+#
+AllowAllParametersOfDeclarationOnNextLine: false
+
+# Determine whether short code blocks can be put on a single line.
+#
+# Example:
+#         while (true)
+#         {}
+#         while (true) {
+#             continue;
+#         }
+#
+AllowShortBlocksOnASingleLine: Never
+
+# Determine whether short case labels are contracted to a single line.
+#
+# Example:
+#         switch (a) {
+#         case 1:
+#             x = 1;
+#             break;
+#         case 2:
+#             return;
+#         }
+#
+AllowShortCaseLabelsOnASingleLine: false
+
+# Determine whether to allow short enums on a single line.
+#
+# Example:
+#         enum
+#         {
+#             A,
+#             B
+#         } myEnum;
+#
+AllowShortEnumsOnASingleLine: false
+
+# Determine whether short functions can be put on a single line.
+#
+# Example:
+#         class Foo {
+#             void f() {
+#                 foo();
+#             }
+#         };
+#         void f() {
+#             foo();
+#         }
+#         void f() {
+#         }
+#
+AllowShortFunctionsOnASingleLine: None
+
+# Determine whether short if statements can be put on a single line.
+#
+# Example:
+#         if (a)
+#             return;
+#         else {
+#             return;
+#         }
+#
+AllowShortIfStatementsOnASingleLine: Never
+
+# Determine whether short lambdas can be put on a single line.
+#
+# Example:
+#         auto lambda = [](int a) {
+#         }
+#         auto lambda2 = [](int a) {
+#             return a;
+#         };
+#
+AllowShortLambdasOnASingleLine: Empty
+
+# Determine whether short loops can be put on a single line.
+#
+# Example:
+#         for (int i = 0; i < 10; i++) {
+#             k++;
+#         }
+#
+AllowShortLoopsOnASingleLine: false
+
+# Determine the function declaration return type breaking style to use.
+#
+# Example:
+#
+AlwaysBreakAfterReturnType: All
+
+# Determines whether to put a break before multiline string literals.
+# This would always put multiline strings start into a new line.
+#
+# Example:
+#         aaaa = "bbbb"
+#                "cccc";
+#
+AlwaysBreakBeforeMultilineStrings: false
+
+# Determines which template declaration breaking style is used.
+#
+# Example:
+#         template <typename T>
+#         T foo() {
+#         }
+#         template <typename T>
+#         T foo(int aaaaaaaaaaaaaaaaaaaaa,
+#               int bbbbbbbbbbbbbbbbbbbbb) {
+#         }
+#
+AlwaysBreakTemplateDeclarations: Yes
+
+# Determines whether function call's arguments will be all on the same line
+# or will have one line each.
+#
+# Example:
+#         int myFunction(aaaaaaaaaaaa,
+#		             bbbbbbbb,
+#                        cccc);
+#
+BinPackArguments: false
+
+
+# Determines whether declaration’s or function definition’s parameters
+# will be all on the same line or will have one line each.
+#
+# Example:
+#         void myFunction(int aaaaaaaaaaaa,
+#		              int bbbbbbbb,
+#                         int cccc);
+#
+BinPackParameters: false
+
+
+# Set individual brace wrapping cases. This is ignored if
+# ‘BreakBeforeBraces’ is not set to ‘Custom’.
+#
+BraceWrapping:
+  # Determine whether to wrap case labels.
+  #
+  # Example:
+  #         switch (foo) {
+  #           case 1:
+  #           {
+  #             bar();
+  #             break;
+  #           }
+  #           default:
+  #           {
+  #             plop();
+  #           }
+  #         }
+  #
+  AfterCaseLabel: true
+
+  # Determine whether to wrap class definitions.
+  #
+  # Example:
+  #         class foo {};
+  #
+  AfterClass: true
+
+  # Determine whether to wrap control statements.
+  #
+  # Example:
+  #
+  AfterControlStatement: Always
+
+  # Determine whether to wrap enum definitions.
+  #
+  # Example:
+  #         enum X : int
+  #         {
+  #             B
+  #         };
+  #
+  AfterEnum: true
+
+
+  # Determine whether to wrap function definitions.
+  #
+  # Example:
+  #         void foo()
+  #         {
+  #             bar();
+  #             bar2();
+  #          }
+  #
+  AfterFunction: true
+
+  # Determine whether to wrap namespace definitions.
+  #
+  # Example:
+  #         namespace
+  #         {
+  #             int foo();
+  #             int bar();
+  #          }
+  #
+  AfterNamespace: true
+
+  # Determine whether to wrap struct definitions.
+  #
+  # Example:
+  #         struct foo
+  #         {
+  #             int x;
+  #         };
+  #
+  AfterStruct: true
+
+  # Determine whether to wrap union definitions.
+  #
+  # Example:
+  #         union foo
+  #         {
+  #             int x;
+  #         }
+  #
+  AfterUnion: true
+
+
+  # Determine whether to wrap extern blocks.
+  #
+  # Example:
+  #         extern "C"
+  #         {
+  #             int foo();
+  #         }
+  #
+  AfterExternBlock: true
+
+  # Determine whether to wrap before the catch keyword.
+  #
+  # Example:
+  #         try {
+  #             foo();
+  #         }
+  #         catch () {
+  #         }
+  #
+  BeforeCatch: true
+
+  # Determine whether to wrap before the else keyword.
+  #
+  # Example:
+  #         if (foo()) {
+  #         }
+  #         else {
+  #         }
+  #
+  BeforeElse: true
+
+  # Determine whether to wrap the lambda block.
+  #
+  # Example:
+  #
+  BeforeLambdaBody: true
+
+  # Determine whether to wrap before while keyword.
+  #
+  # Example:
+  #
+  BeforeWhile: true
+
+  # Determine whether to indent wrapped braces themselves.
+  #
+  # Example:
+  #         if (foo()) {
+  #         }
+  #         else {
+  #         }
+  #
+  IndentBraces: false
+
+  # Determine whether an empty function body can be put on a single line.
+  # This option is used only if the opening brace of the function has
+  # already been wrapped and the function could/should not be put on a
+  # single line.
+  #
+  # Example:
+  #         int f()
+  #         {}
+  #
+  SplitEmptyFunction: false
+
+  # Determine whether an empty record (e.g. class, struct or union) can
+  # be put on a single line.
+  # This option is used only if the opening brace of the record has
+  # already been wrapped.
+  #
+  # Example:
+  #         class foo()
+  #         {}
+  #
+  SplitEmptyRecord: false
+
+  # Determine whether an empty namespace body can be put on a single
+  # line.
+  # This option is used only if the opening brace of the namespace has
+  # already been wrapped.
+  #
+  # Example:
+  #         namespace foo
+  #         {}
+  #
+  SplitEmptyNamespace: false
+
+# Determine the way to wrap the binary operators.
+#
+# Example:
+#         int value = aaaaaaaaaaaaa +
+#                            bbbbbb -
+#                       ccccccccccc;
+#
+BreakBeforeBinaryOperators: None
+
+
+# Choose between premade brace wrapping style or a custom style.
+# If custom style is selected, rules defined under ‘BraceWrapping’ are
+# applied.
+#
+BreakBeforeBraces: Custom
+
+# Determine whether ternary operators will be placed after line breaks.
+#
+# Example:
+#         veryVeryVeryVeryVeryVeryVeryVeryVeryLongDescription ?
+#             firstValue :
+#             SecondValueVeryVeryVeryVeryLong;
+#
+BreakBeforeTernaryOperators: false
+
+# Determine which constructor initializers style is used.
+#
+# Example:
+#         Constructor() :
+#             initializer1(),
+#             initializer2()
+#
+BreakConstructorInitializers: AfterColon
+
+# Determine which inheritance list style is used.
+#
+# Example:
+#         class Foo :
+#             Base1,
+#             Base2
+#         {};
+#
+BreakInheritanceList: AfterColon
+
+# Determine whether breaking string literals when formatting is allowed.
+#
+# Example:
+#         const char* x = "veryVeryVeryVeryVeryVe"
+#                         "ryVeryVeryVeryVeryVery"
+#                         "VeryLongString";
+#
+BreakStringLiterals: true
+
+# Sets the code column limit.
+# A column limit of 0 means that there is no column limit. In this case,
+# clang-format will respect the input’s line breaking decisions within
+# statements unless they contradict other rules.
+#
+ColumnLimit: 100
+
+# Determine whether to allow consecutive namespace declarations to be on
+# the same line.
+#
+# Example:
+#         namespace Foo {
+#         namespace Bar {
+#         }
+#         }
+#
+CompactNamespaces: false
+
+# Determine whether to put each constructor initializer on its own line if
+# they do not fit on a single line.
+#
+# Example:
+#         SomeClass::Constructor()
+#                 : aaaaaaaa(aaaaaaaa),
+#                   aaaaaaaa(aaaaaaaa),
+#                   aaaaaaaa(aaaaaaaaaaaaaaaaaaaaaaaaa) {
+#             return 0;
+#         }
+#
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+
+# Sets the number of characters to use for indentation of constructor
+# initializer lists as well as inheritance lists.
+#
+ConstructorInitializerIndentWidth: 8
+
+
+# Sets the number of characters to use for indentation of line
+# continuations.
+ContinuationIndentWidth: 0
+
+# Determine whether C++11 style of formatting braced list is used.
+# C++11 style of brace list formatting formats the braced lists exactly
+# like function calls would be formatted in their place, with no added
+# whitespaces inside parentheses.
+#
+# Example:
+#         vector<int> x{1, 2, 3, 4};
+#         vector<T> x{{}, {}, {}, {}};
+#         f(MyMap[{composite, key}]);
+#         new int[3]{1, 2, 3};
+#
+Cpp11BracedListStyle: true
+
+
+# Determine whether the formatted file will be analyzed for the most used
+# line ending (\r\n or \n). UseCRLF option is then only used as a fallback
+# if none can be derived.
+#
+DeriveLineEnding: false
+
+# Determine whether the formatted file will be analyzed for the most
+# commonly used alignment of ‘&’ and ‘*’. If enabled, all pointer and
+# reference alignment styles are going to be updated according to the
+# preferences found in the file.
+# PointerAlignment option is then only used as a fallback if none can be
+# derived.
+#
+DerivePointerAlignment: false
+
+# Determine whether to disable formatting completely.
+#
+DisableFormat: false
+
+# Determine whether clang-format will add missing namespace end comments
+# and fix invalid existing ones automatically.
+# Example:
+#         namespace a {
+#             foo();
+#         } // namespace a
+#
+FixNamespaceComments: true
+
+# Determine if and how multiple #include blocks will be sorted and divided # based on category.
+#
+# Example:
+#         #include “b.h”                        #include "a.h"
+#                                               #include "b.h"
+#         #include <lib/main.h>      into
+#         #include “a.h”                        #include <lib/main.h>
+#
+IncludeBlocks: Regroup
+
+# Determine how #include categories shall be ordered by utilizing regular
+# expressions.
+#
+IncludeCategories:
+  - Regex:           '^(<|"(gtest|gmock|isl|json)/)'
+    Priority:        3
+  - Regex:           '<[[:alnum:].]+>'
+    Priority:        4
+  - Regex:           '.*'
+    Priority:        1
+
+
+# Determine whether case label block scope will be indented one level from
+# the case label.
+#
+# Example:
+#
+IndentCaseBlocks: false
+
+# Determine whether case labels will be indented one level from the switch
+# statement.
+#
+# Example:
+#         switch (fool) {
+#             case 1:
+#                 bar();
+#                 break;
+#             default:
+#                 plop();
+#         }
+#
+IndentCaseLabels: true
+
+
+# Determine whether extern blocks will be indented, and how.
+#
+# Example:
+#
+IndentExternBlock: NoIndent
+
+# Determine whether extern blocks will be indented, and how.
+#
+# Example:
+#         #if FOO
+#         #    if BAR
+#         #        include <foo>
+#         #    endif
+#         #endif
+#
+IndentPPDirectives: AfterHash
+
+
+# Sets the number of columns to use for indentation.
+#
+IndentWidth: 4
+
+# Determine whether or not to indent a function definition or declaration
+# if it is wrapped after the type.
+#
+# Example:
+#         LoooooooooooooooooooooooooooooooooooooooongReturnType
+#             LoooooooooooooooooooooooooooooooongFunctionDeclaration();
+#
+IndentWrappedFunctionNames: true
+
+# Determine whether to keep an existing empty line at the start of a block.
+#
+# Example:
+#         if (foo) {
+#             bar();
+#         }
+#
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# Sets the programming language for which this format style has been
+# written.
+#
+Language: Cpp
+
+# Sets the maximum number of consecutive empty lines to keep.
+#
+MaxEmptyLinesToKeep: 1
+
+# Determine whether namespaces are indented.
+#
+# Example:
+#         namespace out {
+#         int i;
+#         namespace in {
+#         int i;
+#         }
+#         }
+#
+NamespaceIndentation: None
+
+# Penalties.
+# Relative relations between these values determine which rules have
+# priority in case multiple rules apply.
+#
+PenaltyBreakAssignment: 98
+PenaltyBreakBeforeFirstCallParameter: 30
+PenaltyBreakComment: 89
+PenaltyBreakFirstLessLess: 0
+PenaltyBreakString: 10
+PenaltyBreakTemplateDeclaration: 80
+PenaltyExcessCharacter: 100
+PenaltyReturnTypeOnItsOwnLine: 60
+
+# Determine the alignment style for pointer and reference operators.
+#
+# Example:
+#         int* a;
+#
+PointerAlignment: Left
+
+# Determine whether to let clang-format attempt to re-flow long comments.
+#
+# Example:
+#         // veryVeryVeryVeryVeryVeryVeryVeryVeryLongComment with plenty
+#         // of information
+#         /* second veryVeryVeryVeryVeryVeryVeryVeryVeryLongComment with
+#         * plenty of information */
+#
+ReflowComments: true
+
+# Determine whether clang-format should alphabetically sort the include
+# statements.
+#
+SortIncludes: false
+
+# Determine whether clang-format should alphabetically sort the using
+# declarations.
+#
+SortUsingDeclarations: false
+
+# Determine whether a space will be inserted after a C-style cast.
+#
+# Example:
+#         x = (int32) y;
+#
+SpaceAfterCStyleCast: true
+
+# Determine whether a space will be inserted after the logical ‘not’
+# operator (!).
+#
+# Example:
+#         !someExpression();
+#
+SpaceAfterLogicalNot: false
+
+# Determine whether a space will be inserted after the ‘template’ keyword.
+#
+# Example:
+#         template<int> void foo();
+#
+SpaceAfterTemplateKeyword: false
+
+
+# Determine whether a space will be inserted before assignment operators.
+#
+# Example:
+#         int a = 5;
+#         a += 42;
+#
+SpaceBeforeAssignmentOperators: true
+
+# Determine whether a space will be inserted before a C++11 braced list
+# used to initialize an object (after the preceding identifier or type).
+#
+# Example:
+#         Foo foo { bar };
+#         Foo {};
+#         vector<int> { 1, 2, 3 };
+#         new int[3] { 1, 2, 3 };
+#
+SpaceBeforeCpp11BracedList: true
+
+# Determine whether a space will be inserted before constructor initializer
+# colon.
+#
+# Example:
+#         Foo::Foo() : a(a) {}
+#
+SpaceBeforeCtorInitializerColon: true
+
+
+# Determine whether a space will be inserted before inheritance colon.
+#
+# Example:
+#         class Foo : Bar {}
+#
+SpaceBeforeInheritanceColon: true
+
+# Determine in which cases to put a space before opening parentheses.
+#
+# Example:
+#         void f() {
+#             if (true) {
+#                 f();
+#             }
+#         }
+#
+SpaceBeforeParens: ControlStatements
+
+# Determine whether spaces will be removed before range-based for loop
+# colon.
+# Example:
+#         for (auto v : values) {}
+#
+SpaceBeforeRangeBasedForLoopColon: true
+
+
+# Determine whether spaces will be added square brackets.
+# Lambdas are not affected by this. If multiple square brackets follow each
+# other, only the first would get a space added.
+#
+# Example:
+#
+SpaceBeforeSquareBrackets: false
+
+# Determine whether spaces will be inserted into empty block brackets.
+#
+# Example:
+#
+SpaceInEmptyBlock: false
+
+# Determine whether spaces will be inserted into empty parentheses.
+#
+# Example:
+#         void f() {
+#             int x[] = {foo(), bar()};
+#             if (true) {
+#                 f();
+#             }
+#         }
+#
+SpaceInEmptyParentheses: false
+
+# Sets the number of spaces inserted before trailing line comments (// -
+# comments).
+# This does not affect trailing block comments (/* - comments).
+#
+# Example:
+#         SpacesBeforeTrailingComments: 3
+#         void f() {
+#             if (true) {   // foo1
+#                 f();        // bar
+#             }             // foo
+#         }
+#
+SpacesBeforeTrailingComments: 2
+
+# Determine whether spaces will be inserted into angle brackets - after
+# ‘<’ and before ‘>’ - in template argument list.
+#
+# Example:
+#         static_cast<int>(arg);
+#         std::function<void(int)> fct;
+#
+SpacesInAngles: false
+
+# Determine whether spaces will be inserted into C-style cast parentheses -
+# after ‘(‘ and before ‘)’.
+#
+# Example:
+#         x = (int32) y;
+#
+SpacesInCStyleCastParentheses: false
+
+
+# Determine whether spaces will be inserted into parentheses - after ‘(‘
+# and before ‘)’ - for if/for/switch/while conditions.
+#
+# Example:
+#
+SpacesInConditionalStatement: false
+
+# Determine whether spaces will be inserted inside container literals.
+#
+# Example:
+#         var arr = [1, 2, 3];
+#
+SpacesInContainerLiterals: false
+
+# Determine whether spaces will be inserted into empty parentheses.
+#
+# Example:
+#         f(arg);
+#
+SpacesInParentheses: false
+
+# Determine whether spaces will be inserted into empty square brackets.
+# Lambdas are not affected by this.
+#
+# Example:
+#         int a[5];    not    int a[ 5 ];
+#
+SpacesInSquareBrackets: false
+
+# Sets language standard. C++ constructs compatible to this standard are
+# parsed and formatted.
+#
+Standard: c++20
+
+# Sets the number of columns used for tab stops.
+#
+TabWidth: 4
+
+# Sets the default character used for line breaks to CRLF.
+# CRLF is used by Windows. LF only is used by Unix and Mac.
+#
+UseCRLF: false
+
+# Determine whether to use tab characters in code files.
+#
+UseTab: Never
