@@ -9,14 +9,16 @@ namespace Producer
 void
 generateTask()
 {
-    constexpr static std::mt19937::result_type lowerBound {0};
-    constexpr static std::mt19937::result_type upperBound {100};
+    constexpr static std::mt19937::result_type kLowerBound {0};
+    constexpr static std::mt19937::result_type kUpperBound {100};
+    constexpr static int                       kNumOfGeneratedNums {10};
 
-    std::random_device device {};
-    std::mt19937 rng {device()};
-    std::uniform_int_distribution<std::mt19937::result_type> distribution {lowerBound, upperBound};
+    std::random_device                                       device {};
+    std::mt19937                                             rng {device()};
+    std::uniform_int_distribution<std::mt19937::result_type> distribution {kLowerBound,
+                                                                           kUpperBound};
 
-    for(int iii {0}; iii < 10; iii++)
+    for (int iii {0}; iii < kNumOfGeneratedNums; iii++)
     {
         using std::chrono_literals::operator""ms;
 
@@ -32,32 +34,17 @@ acknowledgeReceiveTask()
 {}
 }  // namespace Producer
 
-namespace Consumer
-{
-void
-receiveTask()
-{}
-
-void
-acknowledgeSendTask()
-{}
-}  // namespace Consumer
-
 int
 main(int, char*[])
 {
+    fmt::println("Producer task started.");
+
     // Note that jthread is not supported by clang I used.
     std::thread generatorThread {Producer::generateTask};
     std::thread acknowledgeReceiveThread {Producer::acknowledgeReceiveTask};
 
-    std::thread receiveThread {Consumer::receiveTask};
-    std::thread acknowledgeSendThread {Consumer::acknowledgeSendTask};
-
     generatorThread.join();
     acknowledgeReceiveThread.join();
-
-    receiveThread.join();
-    acknowledgeSendThread.join();
 
     return 0;
 }
