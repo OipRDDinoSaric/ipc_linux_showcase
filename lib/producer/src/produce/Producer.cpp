@@ -5,8 +5,6 @@
 
 #include <produce/Producer.hpp>
 
-#include <random>
-#include <chrono>
 #include <thread>
 
 #include <fmt/format.h>
@@ -74,17 +72,10 @@ Producer::sendToConsumer(Package package) const
 void
 Producer::generateImpl()
 {
-    using std::chrono_literals::operator""ms;
-
-    constexpr static std::mt19937::result_type kLowerBound {0};
-    constexpr static std::mt19937::result_type kUpperBound {100};
-    constexpr static int                       kNumOfGeneratedNums {10};
-    constexpr static auto                      kTaskLoopDelay {200ms};
-
     std::random_device                                       device {};
     std::mt19937                                             rng {device()};
-    std::uniform_int_distribution<std::mt19937::result_type> distribution {kLowerBound,
-                                                                           kUpperBound};
+    std::uniform_int_distribution<std::mt19937::result_type> distribution {kRngLowerBound,
+                                                                           kRngUpperBound};
 
     for (int iii {0}; iii < kNumOfGeneratedNums; iii++)
     {
@@ -93,7 +84,7 @@ Producer::generateImpl()
 
         sendToConsumer({iii, static_cast<std::uint32_t>(generatedNumber)});
 
-        std::this_thread::sleep_for(kTaskLoopDelay);
+        std::this_thread::sleep_for(kGenerateTaskLoopDelay);
     }
 }
 

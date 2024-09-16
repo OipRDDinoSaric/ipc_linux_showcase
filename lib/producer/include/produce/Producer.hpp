@@ -3,6 +3,9 @@
  *
  */
 
+#include <random>
+#include <chrono>
+
 #include <cstdint>
 
 namespace Produce
@@ -23,6 +26,11 @@ public:
     acknowledgeReceiveTask(Producer& producer);
 
 private:
+    constexpr static std::mt19937::result_type kRngLowerBound {0};
+    constexpr static std::mt19937::result_type kRngUpperBound {100};
+    constexpr static int                       kNumOfGeneratedNums {10};
+    constexpr static auto kGenerateTaskLoopDelay {std::chrono::milliseconds {200}};
+
     struct Package
     {
         int           id;
@@ -32,8 +40,10 @@ private:
     void
     sendToConsumer(Package package) const;
 
-    void generateImpl();
-    void acknowledgeReceiveLoop() const;
+    void
+    generateImpl();
+    void
+    acknowledgeReceiveLoop() const;
 
     int toConsumerWriteDesc;
     int fromAcknowledgeReadDesc;
