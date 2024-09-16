@@ -10,7 +10,6 @@
 
 #include <fmt/format.h>
 
-#include <mutex>
 #include <thread>
 
 namespace Consume

@@ -3,7 +3,6 @@
 #include <produce/Producer.hpp>
 
 #include <thread>
-#include <iostream>
 
 #include <fmt/format.h>
 
