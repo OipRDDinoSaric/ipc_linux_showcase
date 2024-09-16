@@ -31,6 +31,9 @@ private:
 
     void sendToAcknowledgeSend(int id);
 
+    void receiveLoop();
+    void acknowledgeSendLoop();
+
     int           pipeReadDescriptor;
     std::uint64_t sum;
 

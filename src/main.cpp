@@ -65,7 +65,8 @@ main(int, char*[])
 
         // Note that jthread is not supported by clang I used.
         std::thread generateThread {Produce::Producer::generateTask, std::ref(producer)};
-        std::thread acknowledgeReceiveThread {Produce::Producer::acknowledgeReceiveTask};
+        std::thread acknowledgeReceiveThread {Produce::Producer::acknowledgeReceiveTask,
+                                              std::ref(producer)};
 
         generateThread.join();
         acknowledgeReceiveThread.join();

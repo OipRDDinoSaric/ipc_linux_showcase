@@ -30,15 +30,7 @@ Consumer::receiveTask(Consumer& consumer)
 {
     while (true)
     {
-        const auto package {consumer.receiveGeneratedNumber()};
-
-        fmt::println("Read message {} with value {}.", package.id, package.generatedNum);
-
-        consumer.sum += package.generatedNum;
-
-        fmt::println("Current sum is {}.", consumer.sum);
-
-        consumer.sendToAcknowledgeSend(package.id);
+        consumer.receiveLoop();
     }
 }
 
@@ -47,25 +39,7 @@ Consumer::acknowledgeSendTask(Consumer& consumer)
 {
     while (true)
     {
-        int id {};
-        {
-            {
-                std::unique_lock lock {consumer.mtxReceiveToAcknowledge};
-                consumer.cvReceiveToAcknowledge.wait(
-                lock,
-                [&]()
-                {
-                    return consumer.hasNewMessageForAcknowledge;
-                });
-                id                                   = consumer.idReceiveToAcknowledge;
-                consumer.hasNewMessageForAcknowledge = false;
-            }
-            consumer.cvReceiveToAcknowledge.notify_one();
-        }
-
-        fmt::println("Acknowledging message with id {}.", id);
-
-
+        consumer.acknowledgeSendLoop();
     }
 }
 
@@ -105,6 +79,40 @@ Consumer::sendToAcknowledgeSend(int id)
     }
 
     cvReceiveToAcknowledge.notify_one();
+}
+void
+Consumer::receiveLoop()
+{
+    const auto package {receiveGeneratedNumber()};
+
+    fmt::println("Read message {} with value {}.", package.id, package.generatedNum);
+
+    sum += package.generatedNum;
+
+    fmt::println("Current sum is {}.", sum);
+
+    sendToAcknowledgeSend(package.id);
+}
+
+void
+Consumer::acknowledgeSendLoop()
+{
+    int id {};
+    {
+        {
+            std::unique_lock lock {mtxReceiveToAcknowledge};
+            cvReceiveToAcknowledge.wait(lock,
+                                        [&]()
+                                        {
+                                            return hasNewMessageForAcknowledge;
+                                        });
+            id                          = idReceiveToAcknowledge;
+            hasNewMessageForAcknowledge = false;
+        }
+        cvReceiveToAcknowledge.notify_one();
+    }
+
+    fmt::println("Acknowledging message with id {}.", id);
 }
 
 }  // namespace Consume

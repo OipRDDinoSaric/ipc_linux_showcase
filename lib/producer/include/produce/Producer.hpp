@@ -15,8 +15,8 @@ public:
     static void
     generateTask(Producer& producer);
 
-    static void
-    acknowledgeReceiveTask();
+    [[noreturn]] static void
+    acknowledgeReceiveTask(Producer& producer);
 
 private:
     struct Package
@@ -27,6 +27,9 @@ private:
 
     void
     sendToConsumer(Package package) const;
+
+    void generateImpl();
+    void acknowledgeReceiveLoop();
 
     int pipeWriteDescriptor;
 };

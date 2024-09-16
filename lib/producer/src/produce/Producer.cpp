@@ -22,6 +22,36 @@ Producer::Producer(int pipeWriteDescriptor) : pipeWriteDescriptor {pipeWriteDesc
 void
 Producer::generateTask(Producer& producer)
 {
+    producer.generateImpl();
+}
+
+[[noreturn]] void
+Producer::acknowledgeReceiveTask(Producer& producer)
+{
+    while (true)
+    {
+        producer.acknowledgeReceiveLoop();
+    }
+}
+
+void
+Producer::sendToConsumer(Package package) const
+{
+    ssize_t errorCode {write(pipeWriteDescriptor, &package, sizeof(package))};
+
+    if (sizeof(package) != errorCode)
+    {
+        if (-1 == errorCode)
+        {
+            fmt::println(stderr, "Error while writing to the pipe: {}", strerror(errno));
+            exit(1);
+        }
+        fmt::println(stderr, "Error while writing to the pipe: Size mismatch.");
+    }
+}
+void
+Producer::generateImpl()
+{
     using std::chrono_literals::operator""ms;
 
     constexpr static std::mt19937::result_type kLowerBound {0};
@@ -39,30 +69,13 @@ Producer::generateTask(Producer& producer)
         std::mt19937::result_type generatedNumber {distribution(rng)};
         fmt::println("Generated number {}: {}", iii, generatedNumber);
 
-        producer.sendToConsumer({iii, static_cast<std::uint32_t>(generatedNumber)});
+        sendToConsumer({iii, static_cast<std::uint32_t>(generatedNumber)});
 
         std::this_thread::sleep_for(kTaskLoopDelay);
     }
 }
 
 void
-Producer::acknowledgeReceiveTask()
+Producer::acknowledgeReceiveLoop()
 {}
-
-void
-Producer::sendToConsumer(Package package) const
-{
-    ssize_t errorCode {write(pipeWriteDescriptor, &package, sizeof(package))};
-
-    if (sizeof(package) != errorCode)
-    {
-        if (-1 == errorCode)
-        {
-            fmt::println(stderr, "Error while writing to the pipe: {}", strerror(errno));
-            exit(1);
-        }
-        fmt::println(stderr, "Error while writing to the pipe: Size mismatch.");
-    }
-
-}
 }  // namespace Produce
