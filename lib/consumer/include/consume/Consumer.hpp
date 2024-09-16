@@ -16,8 +16,8 @@ public:
     [[noreturn]] static void
     receiveTask(Consumer& consumer);
 
-    static void
-    acknowledgeSendTask();
+    [[noreturn]] static void
+    acknowledgeSendTask(Consumer& consumer);
 
 private:
     struct Package
@@ -29,9 +29,14 @@ private:
     [[nodiscard]] Package
     receiveGeneratedNumber() const;
 
-    int                     pipeReadDescriptor;
+    void sendToAcknowledgeSend(int id);
+
+    int           pipeReadDescriptor;
+    std::uint64_t sum;
+
     std::condition_variable cvReceiveToAcknowledge;
     std::mutex              mtxReceiveToAcknowledge;
-    std::uint64_t           sum;
+    int                     idReceiveToAcknowledge;
+    bool                    hasNewMessageForAcknowledge;
 };
 }  // namespace Consume

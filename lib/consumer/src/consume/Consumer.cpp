@@ -10,13 +10,19 @@
 
 #include <fmt/format.h>
 
+#include <mutex>
+#include <thread>
+
 namespace Consume
 {
 
 Consumer::Consumer(int pipeReadDescriptor) :
         pipeReadDescriptor {pipeReadDescriptor},
+        sum {0},
         cvReceiveToAcknowledge {},
-        sum {0}
+        mtxReceiveToAcknowledge {},
+        idReceiveToAcknowledge {},
+        hasNewMessageForAcknowledge {false}
 {}
 
 [[noreturn]] void
@@ -31,12 +37,37 @@ Consumer::receiveTask(Consumer& consumer)
         consumer.sum += package.generatedNum;
 
         fmt::println("Current sum is {}.", consumer.sum);
+
+        consumer.sendToAcknowledgeSend(package.id);
     }
 }
 
-void
-Consumer::acknowledgeSendTask()
-{}
+[[noreturn]] void
+Consumer::acknowledgeSendTask(Consumer& consumer)
+{
+    while (true)
+    {
+        int id {};
+        {
+            {
+                std::unique_lock lock {consumer.mtxReceiveToAcknowledge};
+                consumer.cvReceiveToAcknowledge.wait(
+                lock,
+                [&]()
+                {
+                    return consumer.hasNewMessageForAcknowledge;
+                });
+                id                                   = consumer.idReceiveToAcknowledge;
+                consumer.hasNewMessageForAcknowledge = false;
+            }
+            consumer.cvReceiveToAcknowledge.notify_one();
+        }
+
+        fmt::println("Acknowledging message with id {}.", id);
+
+
+    }
+}
 
 Consumer::Package
 Consumer::receiveGeneratedNumber() const
@@ -56,6 +87,24 @@ Consumer::receiveGeneratedNumber() const
     }
 
     return package;
+}
+
+void
+Consumer::sendToAcknowledgeSend(int id)
+{
+    {
+        std::unique_lock lock {mtxReceiveToAcknowledge};
+        cvReceiveToAcknowledge.wait(lock,
+                                    [&]()
+                                    {
+                                        return !hasNewMessageForAcknowledge;
+                                    });
+
+        idReceiveToAcknowledge      = id;
+        hasNewMessageForAcknowledge = true;
+    }
+
+    cvReceiveToAcknowledge.notify_one();
 }
 
 }  // namespace Consume

@@ -80,7 +80,8 @@ main(int, char*[])
         fmt::println("Consumer started.");
 
         std::thread receiveThread {Consume::Consumer::receiveTask, std::ref(consumer)};
-        std::thread acknowledgeSendThread {Consume::Consumer::acknowledgeSendTask};
+        std::thread acknowledgeSendThread {Consume::Consumer::acknowledgeSendTask,
+                                           std::ref(consumer)};
 
         receiveThread.join();
         acknowledgeSendThread.join();
