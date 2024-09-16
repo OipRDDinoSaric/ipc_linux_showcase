@@ -1,2 +1,54 @@
-# ipc_linux_showcase
-Two processes communication synchronization
+# IPC Linux showcase
+
+Two processes of communication synchronization. For more information, see [task](./doc/Task.pdf).
+
+## Building
+
+TODO Broaden.
+
+- Build CMake
+- Run IpxLinuxShowcase
+
+## Rationale for IPC and synchronization mechanism
+
+Two processes and four threads must be synchronized. Each process/thread seam is covered separately.
+
+### Producer generator task and Consumer receive task
+
+A randomly generated number must be sent from the producer to the consumer.
+As producer and consumer are separate processes, an IPC mechanism must be used.
+Linux offers multiple possible ways to handle safely sending data from one process to another.
+
+One option is sockets.
+Even though sockets offer convenient and useful features, they are dismissed because they have an overhead and
+complexity not needed for this simple use-case.
+The overhead is deemed too expensive.
+
+Shared memory offers the fastest transfers between multiple processes and random access to the shared memory, but it
+requires manual synchronization.
+Manual synchronization creates programmer time overhead not needed at this stage of the task.
+
+Message queues feature kernel persistence, meaning shutting down one task and starting it again is straightforward and
+data can be fetched in any order.
+As my philosophy for IPCs is that it is the best when it is the simplest message queues will not be used as a simpler
+IPC exists.
+
+Pipes offer a similar API to message queues, but are used more frequently (sometimes without a merit).
+Pipes are a FIFO buffer with built-in synchronization.
+Here they are used because of the small nature of the message sent, simplicity of the channel and the speed of
+development.
+
+### Consumer receive task and send acknowledge task
+
+To acknowledge a message, message IDs are included in every packet received. 
+The Seam between these two threads does not cross the process barrier and IPC mechanisms are not used. 
+
+The standard library (STL) offers us an API to many common thread synchronization primitives.
+In this case, condition variable is used as it offers a transfer of data from one thread to another in a thread safe
+manner and with RAII.
+
+### Consumer send acknowledge task and producer receive acknowledge task
+
+The pipes are used for this use-case with the same rationale as
+in [Producer generator task and Consumer receive task](#producer-generator-task-and-consumer-receive-task) section.
+
