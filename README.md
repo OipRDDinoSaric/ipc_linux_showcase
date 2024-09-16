@@ -1,6 +1,6 @@
 # IPC Linux showcase
 
-Two processes of communication synchronization. For more information, see [task](./doc/Task.pdf).
+Two processes with two threads showcase synchronization on Linux. For more information, see [task](./doc/Task.pdf).
 
 ## Building and running
 
