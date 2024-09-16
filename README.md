@@ -30,7 +30,7 @@ Manual synchronization creates programmer time overhead not needed at this stage
 
 Message queues feature kernel persistence, meaning shutting down one task and starting it again is straightforward and
 data can be fetched in any order.
-As my philosophy for IPCs is that it is the best when it is the simplest message queues will not be used as a simpler
+As my philosophy for IPCs is that it is the best when it is the simplest message queues will not be used as more popular
 IPC exists.
 
 Pipes offer a similar API to message queues, but are used more frequently (sometimes without a merit).
@@ -40,23 +40,33 @@ development.
 
 ### Consumer receive task and send acknowledge task
 
-To acknowledge a message, message IDs are included in every packet received. 
-The Seam between these two threads does not cross the process barrier and IPC mechanisms are not used. 
+To acknowledge a message, message IDs are included in every packet received.
+The Seam between these two threads does not cross the process barrier and IPC mechanisms are not used.
 
 The standard library (STL) offers us an API to many common thread synchronization primitives.
 In this case, condition variable is used as it offers a transfer of data from one thread to another in a thread safe
 manner and with RAII.
+They also synchronize the tasks, which enables simpler data transfer at the cost of the reading speed.
 
 ### Consumer send acknowledge task and producer receive acknowledge task
 
 The pipes are used for this use-case with the same rationale as
 in [Producer generator task and Consumer receive task](#producer-generator-task-and-consumer-receive-task) section.
 
+## Error handling
+
+Immediate error handling is often used through the code.
+This is a small executable and creating a complex, deferred error handling was dismissed over readability and code
+brevity.
+
 ## Further improvements and inquiries
 
 - Add a timeout/polling when reading from a pipe to make it interruptible with SIGINT.
-I am not sure if this is a requirement for the task, but I can add this upon request.
+  I am not sure if this is a requirement for the task, but I can add this upon request.
 - The task says that the second thread of the consumer must send messages periodically to the producer.
-Does this mean the period between messages must be constant or is the current implementation good enough?
+  Does this mean the period between messages must be constant or is the current implementation good enough?
+- In case faster reading is required, asynchronous transfer of data from a Consumer receive task to send an
+  acknowledgment task should be used.
 
-In case any of these modifications must be made, feel free to contact me.
+In case any of these modifications are necessary, feel free to contact me.
+
