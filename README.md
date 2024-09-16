@@ -4,12 +4,12 @@ Two processes of communication synchronization. For more information, see [task]
 
 ## Building and running
 
-1. Make a new directory for building the project.
+1. Make a new directory for building the project in the project root
 ```shell
 mkdir cmake-build-default
 ```
 
-2. Go to the new directory.
+2. Go to the new directory
 
 ```shell
 cd cmake-build-default
