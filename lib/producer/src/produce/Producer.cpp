@@ -82,7 +82,7 @@ Producer::generateImpl()
 }
 
 void
-Producer::acknowledgeReceiveLoop()
+Producer::acknowledgeReceiveLoop() const
 {
     int id {};
 

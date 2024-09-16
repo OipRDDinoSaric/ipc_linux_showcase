@@ -29,7 +29,7 @@ private:
     sendToConsumer(Package package) const;
 
     void generateImpl();
-    void acknowledgeReceiveLoop();
+    void acknowledgeReceiveLoop() const;
 
     int pipeWriteDescriptor;
     int fromAcknowledgeReadDesc;
