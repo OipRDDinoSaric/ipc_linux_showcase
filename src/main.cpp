@@ -20,7 +20,8 @@ waitForChildrenProcesses()
         if (done == -1)
         {
             if (errno == ECHILD)
-                break;  // no more child processes
+                // No more child processes.
+                break;
         }
         else
         {
@@ -32,6 +33,43 @@ waitForChildrenProcesses()
             }
         }
     }
+}
+
+void
+producerProcess(int toConsumerWriteDesc, int fromAcknowledgeReadDesc)
+{
+    Produce::Producer producer {toConsumerWriteDesc, fromAcknowledgeReadDesc};
+    fmt::println("Producer: start.");
+
+    // Note that jthread is not supported by clang I used.
+    std::thread generateThread {Produce::Producer::generateTask, std::ref(producer)};
+    std::thread acknowledgeReceiveThread {Produce::Producer::acknowledgeReceiveTask,
+                                          std::ref(producer)};
+
+    generateThread.join();
+    acknowledgeReceiveThread.join();
+    fmt::println("Producer: end.");
+
+    close(toConsumerWriteDesc);
+    close(fromAcknowledgeReadDesc);
+}
+
+void
+consumerProcess(int fromGeneratorReadDesc, int toProducerWriteDesc)
+{
+    Consume::Consumer consumer {fromGeneratorReadDesc, toProducerWriteDesc};
+
+    fmt::println("Consumer: start.");
+
+    std::thread receiveThread {Consume::Consumer::receiveTask, std::ref(consumer)};
+    std::thread acknowledgeSendThread {Consume::Consumer::acknowledgeSendTask, std::ref(consumer)};
+
+    receiveThread.join();
+    acknowledgeSendThread.join();
+    fmt::println("Consumer end.");
+
+    close(fromGeneratorReadDesc);
+    close(toProducerWriteDesc);
 }
 
 int
@@ -72,37 +110,11 @@ main(int, char*[])
 
     if (kChildProcessId == proceessId)
     {
-        Produce::Producer producer {toConsumerWriteDesc, fromAcknowledgeReadDesc};
-        fmt::println("Producer: start.");
-
-        // Note that jthread is not supported by clang I used.
-        std::thread generateThread {Produce::Producer::generateTask, std::ref(producer)};
-        std::thread acknowledgeReceiveThread {Produce::Producer::acknowledgeReceiveTask,
-                                              std::ref(producer)};
-
-        generateThread.join();
-        acknowledgeReceiveThread.join();
-        fmt::println("Producer: end.");
-
-        close(toConsumerWriteDesc);
-        close(fromAcknowledgeReadDesc);
+        producerProcess(toConsumerWriteDesc, fromAcknowledgeReadDesc);
     }
     else
     {
-        Consume::Consumer consumer {fromGeneratorReadDesc, toProducerWriteDesc};
-
-        fmt::println("Consumer: start.");
-
-        std::thread receiveThread {Consume::Consumer::receiveTask, std::ref(consumer)};
-        std::thread acknowledgeSendThread {Consume::Consumer::acknowledgeSendTask,
-                                           std::ref(consumer)};
-
-        receiveThread.join();
-        acknowledgeSendThread.join();
-        fmt::println("Consumer end.");
-
-        close(fromGeneratorReadDesc);
-        close(toProducerWriteDesc);
+        consumerProcess(fromGeneratorReadDesc, toProducerWriteDesc);
     }
 
     waitForChildrenProcesses();
