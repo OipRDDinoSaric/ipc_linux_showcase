@@ -1,6 +1,6 @@
 # IPC Linux showcase
 
-Two processes with two threads showcase synchronization on Linux. For more information, see [task](./doc/Task.pdf).
+Two processes of communication synchronization. For more information, see [task](./doc/Task.pdf).
 
 ## Building and running
 
@@ -62,6 +62,7 @@ Pipes offer a similar API to message queues, but are used more frequently (somet
 Pipes are a FIFO buffer with built-in synchronization.
 Here they are used because of the small nature of the message sent, simplicity of the channel and the speed of
 development.
+Another advantage of pipes for this use-case is that their lifetime is as long as the processes that use them.
 
 ### Consumer receive task and send acknowledge task
 
@@ -72,6 +73,10 @@ The standard library (STL) offers us an API to many common thread synchronizatio
 In this case, condition variable is used as it offers a transfer of data from one thread to another in a thread safe
 manner and with RAII.
 They also synchronize the tasks, which enables simpler data transfer at the cost of the reading speed.
+Alternative would be adding a buffer between the threads.
+As pipe is used in the step before, it can buffer the messages that will be synchronous here, between two threads.
+Condition variable offers waiting on the notification of another task which is perfect for this seam.
+
 
 ### Consumer send acknowledge task and producer receive acknowledge task
 
