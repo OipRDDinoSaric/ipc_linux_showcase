@@ -12,5 +12,21 @@ unset(CPM_DOWNLOAD_VERSION)
 
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/install_cpm_packages.cmake)
 
-add_subdirectory(producer)
-add_subdirectory(consumer)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/lib/producer)
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/lib/consumer)
+
+add_executable(IpcLinuxShowcase)
+
+target_sources(IpcLinuxShowcase PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
+)
+
+target_include_directories(IpcLinuxShowcase PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/include
+)
+
+target_link_libraries(IpcLinuxShowcase PRIVATE
+        fmt::fmt
+        Producer::Producer
+        Consumer::Consumer
+)

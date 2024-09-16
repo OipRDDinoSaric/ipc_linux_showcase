@@ -1,11 +1,11 @@
-add_executable(Producer)
+add_library(Producer)
+add_library(Producer::Producer ALIAS Producer)
 
 target_sources(Producer PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/src/main.cpp
         ${CMAKE_CURRENT_LIST_DIR}/src/produce/Producer.cpp
 )
 
-target_include_directories(Producer PRIVATE
+target_include_directories(Producer PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
