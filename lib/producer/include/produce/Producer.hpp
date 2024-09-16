@@ -10,7 +10,7 @@ namespace Produce
 class Producer
 {
 public:
-    explicit Producer(int pipeWriteDescriptor);
+    Producer(int pipeWriteDescriptor, int fromAcknowledgeReadDesc);
 
     static void
     generateTask(Producer& producer);
@@ -32,5 +32,6 @@ private:
     void acknowledgeReceiveLoop();
 
     int pipeWriteDescriptor;
+    int fromAcknowledgeReadDesc;
 };
 }  // namespace Produce

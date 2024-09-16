@@ -39,16 +39,28 @@ main(int, char*[])
 {
     constexpr static pid_t kChildProcessId {0};
 
-    int pipeDescriptor[2];
-    int errorCode {pipe(pipeDescriptor)};
-    int writeDescriptor {pipeDescriptor[1]};
-    int readDescriptor {pipeDescriptor[0]};
+    int generatorPipe[2];
+    int errorCode {pipe(generatorPipe)};
+    if (errorCode != 0)
+    {
+        fmt::println(stderr, "Generator pipe creation failed.");
+        exit(1);
+    }
+
+    int toConsumerWriteDesc {generatorPipe[1]};
+    int fromGeneratorReadDesc {generatorPipe[0]};
+
+    int acknowledgePipe[2];
+    errorCode = pipe(acknowledgePipe);
 
     if (errorCode != 0)
     {
-        fmt::println(stderr, "Pipe creation failed.");
+        fmt::println(stderr, "Acknowledge pipe creation failed.");
         exit(1);
     }
+
+    int toProducerWriteDesc {acknowledgePipe[1]};
+    int fromAcknowledgeReadDesc {acknowledgePipe[0]};
 
     pid_t proceessId {fork()};
 
@@ -60,8 +72,8 @@ main(int, char*[])
 
     if (kChildProcessId == proceessId)
     {
-        Produce::Producer producer {writeDescriptor};
-        fmt::println("Producer started.");
+        Produce::Producer producer {toConsumerWriteDesc, fromAcknowledgeReadDesc};
+        fmt::println("Producer: start.");
 
         // Note that jthread is not supported by clang I used.
         std::thread generateThread {Produce::Producer::generateTask, std::ref(producer)};
@@ -70,15 +82,16 @@ main(int, char*[])
 
         generateThread.join();
         acknowledgeReceiveThread.join();
-        fmt::println("Producer ended.");
+        fmt::println("Producer: end.");
 
-        close(readDescriptor);
+        close(toConsumerWriteDesc);
+        close(fromAcknowledgeReadDesc);
     }
     else
     {
-        Consume::Consumer consumer {readDescriptor};
+        Consume::Consumer consumer {fromGeneratorReadDesc, toProducerWriteDesc};
 
-        fmt::println("Consumer started.");
+        fmt::println("Consumer: start.");
 
         std::thread receiveThread {Consume::Consumer::receiveTask, std::ref(consumer)};
         std::thread acknowledgeSendThread {Consume::Consumer::acknowledgeSendTask,
@@ -86,9 +99,10 @@ main(int, char*[])
 
         receiveThread.join();
         acknowledgeSendThread.join();
-        fmt::println("Consumer ended.");
+        fmt::println("Consumer end.");
 
-        close(writeDescriptor);
+        close(fromGeneratorReadDesc);
+        close(toProducerWriteDesc);
     }
 
     waitForChildrenProcesses();

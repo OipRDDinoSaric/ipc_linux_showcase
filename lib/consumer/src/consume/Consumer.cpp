@@ -16,8 +16,9 @@
 namespace Consume
 {
 
-Consumer::Consumer(int pipeReadDescriptor) :
-        pipeReadDescriptor {pipeReadDescriptor},
+Consumer::Consumer(int fromGeneratorReadDesc, int toProducerWriteDesc) :
+        fromGeneratorReadDesc {fromGeneratorReadDesc},
+        toProducerWriteDesc {toProducerWriteDesc},
         sum {0},
         cvReceiveToAcknowledge {},
         mtxReceiveToAcknowledge {},
@@ -48,16 +49,19 @@ Consumer::receiveGeneratedNumber() const
 {
     Package package {};
 
-    ssize_t errorCode {read(pipeReadDescriptor, &package, sizeof(package))};
+    ssize_t errorCode {read(fromGeneratorReadDesc, &package, sizeof(package))};
 
     if (sizeof(package) != errorCode)
     {
         if (-1 == errorCode)
         {
             fmt::println(stderr, "Error while reading from the pipe: {}", strerror(errno));
-            exit(1);
         }
-        fmt::println(stderr, "Error while reading from the pipe: Size mismatch.");
+        else
+        {
+            fmt::println(stderr, "Error while reading from the pipe: Size mismatch.");
+        }
+        exit(1);
     }
 
     return package;
@@ -80,16 +84,15 @@ Consumer::sendToAcknowledgeSend(int id)
 
     cvReceiveToAcknowledge.notify_one();
 }
+
 void
 Consumer::receiveLoop()
 {
     const auto package {receiveGeneratedNumber()};
-
-    fmt::println("Read message {} with value {}.", package.id, package.generatedNum);
+    fmt::println("Consumer: ID {} = number {}.", package.id, package.generatedNum);
 
     sum += package.generatedNum;
-
-    fmt::println("Current sum is {}.", sum);
+    fmt::println("Consumer: Sum = {}.", sum);
 
     sendToAcknowledgeSend(package.id);
 }
@@ -112,7 +115,22 @@ Consumer::acknowledgeSendLoop()
         cvReceiveToAcknowledge.notify_one();
     }
 
-    fmt::println("Acknowledging message with id {}.", id);
+    fmt::println("Consumer: Acknowledging ID {}.", id);
+
+    ssize_t errorCode {write(toProducerWriteDesc, &id, sizeof(id))};
+
+    if (sizeof(id) != errorCode)
+    {
+        if (-1 == errorCode)
+        {
+            fmt::println(stderr, "Error while writing to the pipe: {}", strerror(errno));
+        }
+        else
+        {
+            fmt::println(stderr, "Error while writing to the pipe: Size mismatch.");
+        }
+        exit(1);
+    }
 }
 
 }  // namespace Consume

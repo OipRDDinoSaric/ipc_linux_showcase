@@ -16,7 +16,9 @@
 namespace Produce
 {
 
-Producer::Producer(int pipeWriteDescriptor) : pipeWriteDescriptor {pipeWriteDescriptor}
+Producer::Producer(int pipeWriteDescriptor, int fromAcknowledgeReadDesc) :
+        pipeWriteDescriptor {pipeWriteDescriptor},
+        fromAcknowledgeReadDesc {fromAcknowledgeReadDesc}
 {}
 
 void
@@ -44,11 +46,15 @@ Producer::sendToConsumer(Package package) const
         if (-1 == errorCode)
         {
             fmt::println(stderr, "Error while writing to the pipe: {}", strerror(errno));
-            exit(1);
         }
-        fmt::println(stderr, "Error while writing to the pipe: Size mismatch.");
+        else
+        {
+            fmt::println(stderr, "Error while writing to the pipe: Size mismatch.");
+        }
+        exit(1);
     }
 }
+
 void
 Producer::generateImpl()
 {
@@ -57,7 +63,7 @@ Producer::generateImpl()
     constexpr static std::mt19937::result_type kLowerBound {0};
     constexpr static std::mt19937::result_type kUpperBound {100};
     constexpr static int                       kNumOfGeneratedNums {10};
-    constexpr static auto                      kTaskLoopDelay {500ms};
+    constexpr static auto                      kTaskLoopDelay {200ms};
 
     std::random_device                                       device {};
     std::mt19937                                             rng {device()};
@@ -67,7 +73,7 @@ Producer::generateImpl()
     for (int iii {0}; iii < kNumOfGeneratedNums; iii++)
     {
         std::mt19937::result_type generatedNumber {distribution(rng)};
-        fmt::println("Generated number {}: {}", iii, generatedNumber);
+        fmt::println("Producer: ID {} = number {}.", iii, generatedNumber);
 
         sendToConsumer({iii, static_cast<std::uint32_t>(generatedNumber)});
 
@@ -77,5 +83,24 @@ Producer::generateImpl()
 
 void
 Producer::acknowledgeReceiveLoop()
-{}
+{
+    int id {};
+
+    ssize_t errorCode {read(fromAcknowledgeReadDesc, &id, sizeof(id))};
+
+    if (sizeof(id) != errorCode)
+    {
+        if (-1 == errorCode)
+        {
+            fmt::println(stderr, "Error while reading from the pipe: {}", strerror(errno));
+        }
+        else
+        {
+            fmt::println(stderr, "Error while reading from the pipe: Size mismatch.");
+        }
+        exit(1);
+    }
+
+    fmt::println("Producer: Acknowledged ID {}. ", id);
+}
 }  // namespace Produce

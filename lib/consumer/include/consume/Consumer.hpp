@@ -11,7 +11,7 @@ namespace Consume
 class Consumer
 {
 public:
-    explicit Consumer(int pipeReadDescriptor);
+    Consumer(int fromGeneratorReadDesc, int toProducerWriteDesc);
 
     [[noreturn]] static void
     receiveTask(Consumer& consumer);
@@ -29,12 +29,17 @@ private:
     [[nodiscard]] Package
     receiveGeneratedNumber() const;
 
-    void sendToAcknowledgeSend(int id);
+    void
+    sendToAcknowledgeSend(int id);
 
-    void receiveLoop();
-    void acknowledgeSendLoop();
+    void
+    receiveLoop();
+    void
+    acknowledgeSendLoop();
 
-    int           pipeReadDescriptor;
+    int fromGeneratorReadDesc;
+    int toProducerWriteDesc;
+
     std::uint64_t sum;
 
     std::condition_variable cvReceiveToAcknowledge;
