@@ -4,6 +4,7 @@
  */
 
 #include <cstdint>
+#include <condition_variable>
 
 namespace Consume
 {
@@ -25,9 +26,12 @@ private:
         std::uint32_t generatedNum;
     };
 
-    Package
-    receiveGeneratedNumber();
+    [[nodiscard]] Package
+    receiveGeneratedNumber() const;
 
-    int pipeReadDescriptor;
+    int                     pipeReadDescriptor;
+    std::condition_variable cvReceiveToAcknowledge;
+    std::mutex              mtxReceiveToAcknowledge;
+    std::uint64_t           sum;
 };
 }  // namespace Consume

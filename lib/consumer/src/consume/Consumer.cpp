@@ -13,7 +13,10 @@
 namespace Consume
 {
 
-Consumer::Consumer(int pipeReadDescriptor) : pipeReadDescriptor {pipeReadDescriptor}
+Consumer::Consumer(int pipeReadDescriptor) :
+        pipeReadDescriptor {pipeReadDescriptor},
+        cvReceiveToAcknowledge {},
+        sum {0}
 {}
 
 [[noreturn]] void
@@ -24,6 +27,10 @@ Consumer::receiveTask(Consumer& consumer)
         const auto package {consumer.receiveGeneratedNumber()};
 
         fmt::println("Read message {} with value {}.", package.id, package.generatedNum);
+
+        consumer.sum += package.generatedNum;
+
+        fmt::println("Current sum is {}.", consumer.sum);
     }
 }
 
@@ -32,7 +39,7 @@ Consumer::acknowledgeSendTask()
 {}
 
 Consumer::Package
-Consumer::receiveGeneratedNumber()
+Consumer::receiveGeneratedNumber() const
 {
     Package package {};
 
