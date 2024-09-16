@@ -16,17 +16,33 @@
 namespace Produce
 {
 
-Producer::Producer(int pipeWriteDescriptor, int fromAcknowledgeReadDesc) :
-        pipeWriteDescriptor {pipeWriteDescriptor},
+/**
+ * @brief Construct Producer.
+ *
+ * @param[in] toConsumerWriteDesc     Pipe descriptor to send generated numbers to.
+ * @param[in] fromAcknowledgeReadDesc Pipe descriptor to receive acknowledgements.
+ */
+Producer::Producer(int toConsumerWriteDesc, int fromAcknowledgeReadDesc) :
+        toConsumerWriteDesc {toConsumerWriteDesc},
         fromAcknowledgeReadDesc {fromAcknowledgeReadDesc}
 {}
 
+/**
+ * @brief Task that generates numbers periodically. Use with thread.
+ *
+ * @param[in] producer Producer context.
+ */
 void
 Producer::generateTask(Producer& producer)
 {
     producer.generateImpl();
 }
 
+/**
+ * @brief Task that loops infinitely expecting message of acknowledgement. Use with thread.
+ *
+ * @param[in] producer Producer context.
+ */
 [[noreturn]] void
 Producer::acknowledgeReceiveTask(Producer& producer)
 {
@@ -39,7 +55,7 @@ Producer::acknowledgeReceiveTask(Producer& producer)
 void
 Producer::sendToConsumer(Package package) const
 {
-    ssize_t errorCode {write(pipeWriteDescriptor, &package, sizeof(package))};
+    ssize_t errorCode {write(toConsumerWriteDesc, &package, sizeof(package))};
 
     if (sizeof(package) != errorCode)
     {

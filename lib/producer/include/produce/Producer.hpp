@@ -7,10 +7,14 @@
 
 namespace Produce
 {
+
+/**
+ * @brief Implements generating numbers in one thread and receiving acknowledgements in another.
+ */
 class Producer
 {
 public:
-    Producer(int pipeWriteDescriptor, int fromAcknowledgeReadDesc);
+    Producer(int toConsumerWriteDesc, int fromAcknowledgeReadDesc);
 
     static void
     generateTask(Producer& producer);
@@ -31,7 +35,7 @@ private:
     void generateImpl();
     void acknowledgeReceiveLoop() const;
 
-    int pipeWriteDescriptor;
+    int toConsumerWriteDesc;
     int fromAcknowledgeReadDesc;
 };
 }  // namespace Produce

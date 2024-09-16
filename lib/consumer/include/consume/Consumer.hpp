@@ -8,6 +8,9 @@
 
 namespace Consume
 {
+/**
+ * @brief Implements receiving numbers and sending the acknoweldgement.
+ */
 class Consumer
 {
 public:

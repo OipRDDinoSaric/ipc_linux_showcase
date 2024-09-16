@@ -15,7 +15,12 @@
 
 namespace Consume
 {
-
+/**
+ * @brief Construct Consumer.
+ *
+ * @param[in] fromGeneratorReadDesc Pipe descriptor to read generated numbers.
+ * @param[in] toProducerWriteDesc   Pipe descriptor to write acknowledgements to.
+ */
 Consumer::Consumer(int fromGeneratorReadDesc, int toProducerWriteDesc) :
         fromGeneratorReadDesc {fromGeneratorReadDesc},
         toProducerWriteDesc {toProducerWriteDesc},
@@ -26,6 +31,12 @@ Consumer::Consumer(int fromGeneratorReadDesc, int toProducerWriteDesc) :
         hasNewMessageForAcknowledge {false}
 {}
 
+/**
+ * @brief Task that loops infinitely while waiting on new generated numbers. Generated numbers are
+ * processed and sent to acknowledge send task. Use with thread.
+ *
+ * @param[in] consumer Consumer for context.
+ */
 [[noreturn]] void
 Consumer::receiveTask(Consumer& consumer)
 {
@@ -34,7 +45,12 @@ Consumer::receiveTask(Consumer& consumer)
         consumer.receiveLoop();
     }
 }
-
+/**
+ * @brief Task that loops infinitely while waiting on new needed acknowledgements. Sends the
+ * acknoweldgement over the pipe. Use with thread.
+ *
+ * @param[in] consumer Consumer for context.
+ */
 [[noreturn]] void
 Consumer::acknowledgeSendTask(Consumer& consumer)
 {
