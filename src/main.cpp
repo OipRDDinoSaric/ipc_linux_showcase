@@ -8,10 +8,10 @@
 #include <fmt/format.h>
 
 #include <unistd.h>
-#include <sys/types.h>
 #include <sys/wait.h>
 
-void waitForChildrenProcesses()
+void
+waitForChildrenProcesses()
 {
     while (true)
     {
@@ -38,7 +38,19 @@ int
 main(int, char*[])
 {
     constexpr static pid_t kChildProcessId {0};
-    pid_t                  proceessId {fork()};
+
+    int pipeDescriptor[2];
+    int errorCode {pipe(pipeDescriptor)};
+    int writeDescriptor {pipeDescriptor[1]};
+    int readDescriptor {pipeDescriptor[0]};
+
+    if (errorCode != 0)
+    {
+        fmt::println(stderr, "Pipe creation failed.");
+        exit(1);
+    }
+
+    pid_t proceessId {fork()};
 
     if (proceessId < 0)
     {
@@ -48,27 +60,33 @@ main(int, char*[])
 
     if (kChildProcessId == proceessId)
     {
+        Produce::Producer producer {writeDescriptor};
         fmt::println("Producer started.");
 
         // Note that jthread is not supported by clang I used.
-        std::thread generatorThread {Produce::Producer::generateTask};
+        std::thread generateThread {Produce::Producer::generateTask, std::ref(producer)};
         std::thread acknowledgeReceiveThread {Produce::Producer::acknowledgeReceiveTask};
 
-        generatorThread.join();
+        generateThread.join();
         acknowledgeReceiveThread.join();
         fmt::println("Producer ended.");
+
+        close(readDescriptor);
     }
     else
     {
+        Consume::Consumer consumer {readDescriptor};
+
         fmt::println("Consumer started.");
 
-        std::thread receiveThread {Consume::Consumer::receiveTask};
+        std::thread receiveThread {Consume::Consumer::receiveTask, std::ref(consumer)};
         std::thread acknowledgeSendThread {Consume::Consumer::acknowledgeSendTask};
 
         receiveThread.join();
         acknowledgeSendThread.join();
         fmt::println("Consumer ended.");
 
+        close(writeDescriptor);
     }
 
     waitForChildrenProcesses();
