@@ -2,12 +2,37 @@
 
 Two processes of communication synchronization. For more information, see [task](./doc/Task.pdf).
 
-## Building
+## Building and running
 
-TODO Broaden.
+1. Make a new directory for building the project.
+```shell
+mkdir cmake-build-default
+```
 
-- Build CMake
-- Run IpxLinuxShowcase
+2. Go to the new directory.
+
+```shell
+cd cmake-build-default
+```
+
+3. Configure CMake
+
+```shell
+cmake ../
+```
+
+4. Compile the project
+```shell
+cmake --build .
+```
+
+5. Run the executable
+
+```shell
+./IpcLinuxShowcase
+```
+
+Tested on aarch64 with ubuntu 22.04 LTS and macOS.
 
 ## Rationale for IPC and synchronization mechanism
 
