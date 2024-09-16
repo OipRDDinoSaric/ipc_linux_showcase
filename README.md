@@ -52,3 +52,11 @@ manner and with RAII.
 The pipes are used for this use-case with the same rationale as
 in [Producer generator task and Consumer receive task](#producer-generator-task-and-consumer-receive-task) section.
 
+## Further improvements and inquiries
+
+- Add a timeout/polling when reading from a pipe to make it interruptible with SIGINT.
+I am not sure if this is a requirement for the task, but I can add this upon request.
+- The task says that the second thread of the consumer must send messages periodically to the producer.
+Does this mean the period between messages must be constant or is the current implementation good enough?
+
+In case any of these modifications must be made, feel free to contact me.
